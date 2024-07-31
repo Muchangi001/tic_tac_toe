@@ -4,7 +4,7 @@ Clone using **"git clone -b tic_tac_toe_mini_max_algorithm https://github.com/Mu
 
 # HOW TO PLAY
 The source files are already compiled **(linux users only)**.   
-To play the game run the *"tic_tac_toe" executable in the bin folder.  
+To play the game run the **"tictactoe"** executable in the bin folder.  
 Run **"./tictactoe"** inside the bin folder.  
 Windows and Mac users would have to compile the source files themselves.  
 
