@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <random>
 #include <algorithm>
+#include <utility>  // For std::pair
 
-//global variables declaration
+// Global variables declaration
 extern std::string grid[3][3];
 extern std::string symbols[2];
 extern std::string playerSymbol;
@@ -17,7 +17,7 @@ extern std::vector<int> playerInputs;
 extern std::vector<int> compInputs;
 extern unsigned playerCount;
 
-//functions declaration
+// Function declarations
 int mapRawInput(const std::string &in);
 void compTurn();
 void playerTurn();
@@ -25,8 +25,12 @@ void displayGrid();
 void selectSymbol();
 void initializeGame();
 void setPlayerPosition(const int &pos);
-void setPosition(const int &position,const std::string &symbol);
+void setPosition(const int &position, const std::string &symbol);
 bool gameOver();
 bool isWinningLine(const std::string &a, const std::string &b, const std::string &c);
+int evaluate();
+bool isMovesLeft();
+int minimax(int depth, bool isMax);
+std::pair<int, int> findBestMove();
 
-#endif
+#endif // TIC_TAC_TOE_H

@@ -127,20 +127,15 @@ void setPlayerPosition(const int &pos) {
 }
 
 void compTurn() {
-    // Computer's turn to choose a position
-    int randPos;
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_int_distribution<int> distribution(1, 9);
+    auto bestMove = findBestMove();
+    int row = bestMove.first;
+    int col = bestMove.second;
 
-    // Generate a random position that hasn't been taken
-    do {
-        randPos = distribution(generator); 
-    } while (std::count(playerInputs.cbegin(), playerInputs.cend(), randPos) > 0
-        || std::count(compInputs.cbegin(), compInputs.cend(), randPos) > 0);
-
-    compInputs.push_back(randPos);
-    setPosition(randPos, compSymbol);
+    if (row != -1 && col != -1) {
+        grid[row][col] = compSymbol;
+        int pos = row * 3 + col + 1;
+        compInputs.push_back(pos);
+    }
 }
 
 bool isWinningLine(const std::string &a, const std::string &b, const std::string &c) {
@@ -175,4 +170,144 @@ bool gameOver() {
         return true;
     }
     return false;
+}
+
+int evaluate() {
+    // Evaluate rows
+    for (int row = 0; row < 3; ++row) {
+        if (grid[row][0] == grid[row][1] && grid[row][1] == grid[row][2]) {
+            if (grid[row][0] == compSymbol)
+                return +10;
+            else if (grid[row][0] == playerSymbol)
+                return -10;
+        }
+    }
+
+    // Evaluate columns
+    for (int col = 0; col < 3; ++col) {
+        if (grid[0][col] == grid[1][col] && grid[1][col] == grid[2][col]) {
+            if (grid[0][col] == compSymbol)
+                return +10;
+            else if (grid[0][col] == playerSymbol)
+                return -10;
+        }
+    }
+
+    // Evaluate diagonals
+    if (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) {
+        if (grid[0][0] == compSymbol)
+            return +10;
+        else if (grid[0][0] == playerSymbol)
+            return -10;
+    }
+
+    if (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0]) {
+        if (grid[0][2] == compSymbol)
+            return +10;
+        else if (grid[0][2] == playerSymbol)
+            return -10;
+    }
+
+    // If no one has won
+    return 0;
+}
+
+bool isMovesLeft() {
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (grid[i][j] == " ")
+                return true;
+    return false;
+}
+
+int minimax(int depth, bool isMax) {
+    int score = evaluate();
+
+    // If the computer has won the game, return the evaluated score
+    if (score == 10)
+        return score;
+
+    // If the player has won the game, return the evaluated score
+    if (score == -10)
+        return score;
+
+    // If there are no more moves and no winner, then it is a tie
+    if (!isMovesLeft())
+        return 0;
+
+    // If it is the maximizer's move (computer)
+    if (isMax) {
+        int best = -1000;
+
+        // Traverse all cells
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                // Check if cell is empty
+                if (grid[i][j] == " ") {
+                    // Make the move
+                    grid[i][j] = compSymbol;
+
+                    // Call minimax recursively and choose the maximum value
+                    best = std::max(best, minimax(depth + 1, !isMax));
+
+                    // Undo the move
+                    grid[i][j] = " ";
+                }
+            }
+        }
+        return best;
+    }
+
+    // If it is the minimizer's move (player)
+    else {
+        int best = 1000;
+
+        // Traverse all cells
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                // Check if cell is empty
+                if (grid[i][j] == " ") {
+                    // Make the move
+                    grid[i][j] = playerSymbol;
+
+                    // Call minimax recursively and choose the minimum value
+                    best = std::min(best, minimax(depth + 1, !isMax));
+
+                    // Undo the move
+                    grid[i][j] = " ";
+                }
+            }
+        }
+        return best;
+    }
+}
+
+std::pair<int, int> findBestMove() {
+    int bestVal = -1000;
+    std::pair<int, int> bestMove = {-1, -1};
+
+    // Traverse all cells, evaluate minimax function for all empty cells
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            // Check if cell is empty
+            if (grid[i][j] == " ") {
+                // Make the move
+                grid[i][j] = compSymbol;
+
+                // Compute evaluation function for this move
+                int moveVal = minimax(0, false);
+
+                // Undo the move
+                grid[i][j] = " ";
+
+                // If the value of the current move is more than the best value, update best
+                if (moveVal > bestVal) {
+                    bestMove = {i, j};
+                    bestVal = moveVal;
+                }
+            }
+        }
+    }
+
+    return bestMove;
 }
