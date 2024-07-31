@@ -1,5 +1,6 @@
 # OVERVIEW
-Just made the opponent more challenging by using **mini-max** algorithm.
+Just made the opponent more challenging by using **mini-max** algorithm.  
+Clone using **"git clone -b tic_tac_toe_mini_max_algorithm https://github.com/Muchangi001/tic_tac_toe.git"**
 
 # HOW TO PLAY
 The source files are already compiled **(linux users only)**.   
