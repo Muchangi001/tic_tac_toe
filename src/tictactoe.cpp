@@ -152,21 +152,21 @@ bool gameOver() {
     // Check for rows
     for (int i = 0; i < 3; ++i) {
         if (isWinningLine(grid[i][0], grid[i][1], grid[i][2])) {
-            winner = (grid[i][0] == symbols[0]) ? "Computer" : "Player";
+            winner = (grid[i][0] == compSymbol) ? "Computer" : "Player";
             return true;
         }
     }
     // Check for columns
     for (int i = 0; i < 3; ++i) {
         if (isWinningLine(grid[0][i], grid[1][i], grid[2][i])) {
-            winner = (grid[0][i] == symbols[0]) ? "Computer" : "Player";
+            winner = (grid[0][i] == compSymbol) ? "Computer" : "Player";
             return true;
         }
     }
     // Check diagonals
     if (isWinningLine(grid[0][0], grid[1][1], grid[2][2])
         || isWinningLine(grid[0][2], grid[1][1], grid[2][0])) {
-        winner = (grid[1][1] == symbols[0]) ? "Computer" : "Player";
+        winner = (grid[1][1] == compSymbol) ? "Computer" : "Player";
         return true;
     }
     // Check for draws
