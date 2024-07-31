@@ -1,6 +1,6 @@
 # OVERVIEW
 Basic implemetation of tic tac toe game.  
-For a more challenging opponent check out the mini_max branch of this repo.
+For a more challenging opponent check out the **"mini_max_algorithm"** branch of this repo.
 
 # HOW TO PLAY
 The source files are already compiled **(for linux users only)**.  
